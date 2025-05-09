@@ -24,3 +24,29 @@ def make_per_sample_grad_fn(model: nn.Module, loss_fn):
     return per_sample, params
 
 
+def clip_and_noise(per_sample_grads: dict, max_norm: float, sigma: float, batch_size: int):
+    """Per-sample clipping then sum + Gaussian noise."""
+    flat = torch.cat([g.reshape(g.shape[0], -1) for g in per_sample_grads.values()], dim=1)
+    norms = flat.norm(dim=1)
+    scale = (max_norm / (norms + 1e-9)).clamp(max=1.0)
+
+    clipped = {}
+    for name, g in per_sample_grads.items():
+        view_shape = (g.shape[0],) + (1,) * (g.dim() - 1)
+        clipped[name] = g * scale.view(view_shape)
+
+    summed = {name: g.sum(dim=0) for name, g in clipped.items()}
+    noised = {name: g + torch.randn_like(g) * sigma * max_norm for name, g in summed.items()}
+    return {name: g / batch_size for name, g in noised.items()}
+
+
+def dp_step(model, optimizer, loss_fn, x, y, max_norm, sigma):
+    per_sample_grads_fn, params = make_per_sample_grad_fn(model, loss_fn)
+    grads = per_sample_grads_fn(params, x, y)
+    private_grads = clip_and_noise(grads, max_norm, sigma, batch_size=x.shape[0])
+
+    # write grads onto the model and step
+    for name, p in model.named_parameters():
+        p.grad = private_grads[name].detach()
+    optimizer.step()
+    optimizer.zero_grad()
