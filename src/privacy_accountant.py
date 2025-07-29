@@ -34,3 +34,20 @@ def _compute_rdp(q: float, sigma: float, alpha: float) -> float:
     return float(log_a) / (alpha - 1)
 
 
+def compute_rdp(q: float, sigma: float, steps: int, orders) -> np.ndarray:
+    rdp = np.zeros(len(orders), dtype=np.float64)
+    for i, alpha in enumerate(orders):
+        rdp[i] = _compute_rdp(q, sigma, alpha) * steps
+    return rdp
+
+
+def get_privacy_spent(orders, rdp, target_delta: float):
+    """Convert RDP curve to the tightest (epsilon, delta) pair."""
+    orders = np.asarray(orders, dtype=np.float64)
+    rdp = np.asarray(rdp, dtype=np.float64)
+    eps = rdp - math.log(target_delta) / (orders - 1)
+    idx = int(np.argmin(eps))
+    return float(eps[idx]), float(orders[idx])
+
+
+DEFAULT_ORDERS = [1 + x / 10.0 for x in range(1, 100)] + list(range(12, 64))
