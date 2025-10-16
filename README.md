@@ -20,3 +20,11 @@ tracks privacy budget with an RDP accountant.
 - `src/dp_sgd.py` — from-scratch DP-SGD trainer
 - `src/privacy_accountant.py` — RDP accountant (lightweight implementation)
 - `src/train_mnist.py` — end-to-end training script with budget tracking
+
+
+## Run
+
+```bash
+pip install -r requirements.txt
+python src/train_mnist.py --epochs 20 --target-epsilon 8.0
+```
