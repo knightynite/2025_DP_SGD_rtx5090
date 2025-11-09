@@ -1,4 +1,5 @@
-torch>=2.5
-torchvision>=0.20
+torch>=2.6
+torchvision>=0.21
 opacus>=1.5
 numpy>=1.26
+transformer-engine>=1.0; platform_system == 'Linux'
