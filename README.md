@@ -28,3 +28,10 @@ tracks privacy budget with an RDP accountant.
 pip install -r requirements.txt
 python src/train_mnist.py --epochs 20 --target-epsilon 8.0
 ```
+
+
+## Open questions worth investigating
+
+- Can you afford ε=2 on a useful CIFAR-10 model? (Tight budget.)
+- Does FP8 mixed precision interact safely with gradient clipping?
+- What's the wall-clock cost of full RDP accounting vs. moments accountant?
