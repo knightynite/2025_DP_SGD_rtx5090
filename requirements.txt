@@ -1,5 +1,6 @@
-torch>=2.6
-torchvision>=0.21
+# 2025-era versions, Blackwell / CUDA 13.x compatible
+torch>=2.5
+torchvision>=0.20
 opacus>=1.5
 numpy>=1.26
-transformer-engine>=1.0; platform_system == 'Linux'
+scipy>=1.13

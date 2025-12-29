@@ -14,13 +14,11 @@ tracks privacy budget with an RDP accountant.
 2. **Opacus** comparison for sanity-check
 3. **Privacy accountant** (`src/privacy_accountant.py`) — RDP-based ε, δ tracking
 
-
 ## Files
 
 - `src/dp_sgd.py` — from-scratch DP-SGD trainer
 - `src/privacy_accountant.py` — RDP accountant (lightweight implementation)
 - `src/train_mnist.py` — end-to-end training script with budget tracking
-
 
 ## Run
 
@@ -28,7 +26,6 @@ tracks privacy budget with an RDP accountant.
 pip install -r requirements.txt
 python src/train_mnist.py --epochs 20 --target-epsilon 8.0
 ```
-
 
 ## Open questions worth investigating
 
